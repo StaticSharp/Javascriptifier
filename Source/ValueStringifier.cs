@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 
 namespace Javascriptifier;
 
@@ -6,9 +7,9 @@ public interface IConvertableToJsValue {
     string ToJsValue();
 }
 
-public partial class CSValueToJSValueConverter {
+public partial class ValueStringifier {
 
-    public static string ObjectToJsValue(object? value) {
+    public static string Stringify(object? value) {
         if (value == null)
             return "null";
         if (value is bool valueAsBool) {
@@ -43,10 +44,5 @@ public partial class CSValueToJSValueConverter {
         }
 
         throw new NotImplementedException($"Convertion to Js value not implemented for type {value.GetType()}");
-
-        //return value.ToString() ?? "";
     }
-
 }
-    
-    

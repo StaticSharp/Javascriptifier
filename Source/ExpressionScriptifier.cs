@@ -1,56 +1,43 @@
-using StaticSharp.Gears;
-using System.Diagnostics.CodeAnalysis;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Numerics;
 using System.Reflection;
-
 
 namespace Javascriptifier;
 
-public class Result {
+public class ExpressionScriptifier {
 
 
-    public bool Calculable {
-        get {
-            return Expression != null;
+    public class Result {
+        public bool Calculable => Expression != null;
+
+        private string? Script { get; set; } = null;
+        private Expression? Expression { get; set; } = null;
+
+        public Result(string script) {
+            Script = script;
+        }
+        public Result(Expression expression) {
+            Expression = expression;
+        }
+        public static implicit operator bool(Result result) {
+            return result.Calculable;
+        }
+        public override string ToString() {
+            if (Script != null)
+                return Script;
+
+            if (Expression == null)
+                throw new InvalidOperationException();
+
+            var compiledExpression = Expression.Lambda(Expression).Compile();
+            var value = compiledExpression.DynamicInvoke();
+
+            var script = ValueStringifier.Stringify(value);
+            return script;
         }
     }
-
-    private string? Script { get; set; } = null;
-
-    public Expression? Expression { get; set; } = null;
-
-    public Result(string script) {
-        Script = script;
-    }
-
-    public Result(Expression expression) {
-        Expression = expression;
-    }
-
-    public static implicit operator bool(Result result) {
-        return result.Calculable;
-    }
-
-    public override string ToString() {
-        if (Script != null)
-            return Script;
-
-        if (Expression == null)
-            throw new InvalidOperationException();
-
-        var compiledExpression = Expression.Lambda(Expression).Compile();
-        var value = compiledExpression.DynamicInvoke();
-
-        var script = CSValueToJSValueConverter.ObjectToJsValue(value);
-        return script;
-    }
-
-}
-
-
-public class ExpressionScriptifier {
 
 
     public static Result Scriptify(LambdaExpression expression) {
@@ -67,7 +54,6 @@ public class ExpressionScriptifier {
     }
 
     public static Result Eval(Expression expression) {
-
         switch (expression) {
             case LambdaExpression lambdaExpression: return EvalLambdaExpression(lambdaExpression);
             case BinaryExpression binaryExpression: return EvalBinaryExpression(binaryExpression);
@@ -78,8 +64,6 @@ public class ExpressionScriptifier {
             case MethodCallExpression methodCallExpression: return EvalMethodCallExpression(methodCallExpression);
             case ConditionalExpression conditionalExpression: return EvalConditionalExpression(conditionalExpression);
         }
-
-
         throw NotImplemented(expression);
     }
 
@@ -96,8 +80,7 @@ public class ExpressionScriptifier {
 
     }
 
-    private static Result EvalMethodCallExpression(MethodCallExpression expression) {
-        
+    private static Result EvalMethodCallExpression(MethodCallExpression expression) {        
         var parameters = expression.Method.GetParameters();
         var arguments = expression.Arguments.ToArray();
         List<Result> argumentsResults = new();
@@ -196,16 +179,12 @@ public class ExpressionScriptifier {
         return new Result(objectOrType + memberName);
     }
 
-
-
-
     private static string GetTypeName(Type type) {
         var typeName = type.Name;
         typeName = type.GetCustomAttribute<JavascriptClassAttribute>()?.Name
             ?? typeName;
         return typeName;
     }
-
 
     private static Result EvalUnaryExpression(UnaryExpression expression) {
 
@@ -233,8 +212,6 @@ public class ExpressionScriptifier {
         return new Result(script);
 
     }
-
-
 
     public static Result EvalBinaryExpression(BinaryExpression binaryExpression) {
 
@@ -287,21 +264,6 @@ public class ExpressionScriptifier {
             return new Result(script);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private static Exception NotImplemented(Expression expression) {
         return new NotImplementedException($"Expression Type: {expression.GetType().FullName} NodeType: {expression.NodeType}");

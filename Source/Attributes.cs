@@ -1,7 +1,5 @@
 ﻿using System;
-
-namespace StaticSharp.Gears;
-
+namespace Javascriptifier;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class JavascriptClassAttribute : Attribute {

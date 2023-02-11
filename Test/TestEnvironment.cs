@@ -1,16 +1,10 @@
-﻿using StaticSharp.Gears;
-using System.Linq.Expressions;
-
+﻿using System.Linq.Expressions;
+using Javascriptifier;
 
 namespace Js {
 
 
-    public class JavascriptOnlyException: Exception {
-
-    }
-
-
-    public interface Block {
+    public interface TestEnvironment {
         bool Bool { get; }
         public int Int { get; }
         public double Width { get; }
