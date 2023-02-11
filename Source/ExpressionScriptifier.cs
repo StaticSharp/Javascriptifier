@@ -63,6 +63,7 @@ public class ExpressionScriptifier {
             case ConstantExpression constantExpression: return new Result(constantExpression);
             case MethodCallExpression methodCallExpression: return EvalMethodCallExpression(methodCallExpression);
             case ConditionalExpression conditionalExpression: return EvalConditionalExpression(conditionalExpression);
+            case NewExpression newExpression: return new Result(newExpression);
         }
         throw NotImplemented(expression);
     }
@@ -222,9 +223,13 @@ public class ExpressionScriptifier {
 
 
         if (binaryExpression.Method != null) {
+            
             var customConverter = binaryExpression.Method.GetCustomAttribute<JavascriptMethodFormatAttribute>()?.Format;
             if (customConverter != null) {
-                var script = string.Format(customConverter, left.ToString(), right.ToString());
+                var typeName = GetTypeName(binaryExpression.Method.DeclaringType!);
+                if (!string.IsNullOrEmpty(typeName))
+                    typeName = typeName + '.';
+                var script = typeName + string.Format(customConverter, left.ToString(), right.ToString());
                 return new Result(script);
             }
         }

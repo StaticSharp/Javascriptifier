@@ -3,8 +3,8 @@ using System.Globalization;
 
 namespace Javascriptifier;
 
-public interface IConvertableToJsValue {
-    string ToJsValue();
+public interface IStringifiable {
+    string ToJavascriptString();
 }
 
 public partial class ValueStringifier {
@@ -23,8 +23,8 @@ public partial class ValueStringifier {
             return "\"" + value.ToString() + "\"";
         }
 
-        if (value is IConvertableToJsValue convertableToJsValue) {
-            return convertableToJsValue.ToJsValue();
+        if (value is IStringifiable stringifiable) {
+            return stringifiable.ToJavascriptString();
         }
 #warning Add .ToString(format)
         if (value is decimal valueAsDecimal) {

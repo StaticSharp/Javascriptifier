@@ -178,4 +178,16 @@ public class UnitTest {
             );
     }
 
+
+    [TestMethod]
+    public void OperatorOverloading() {
+
+        A(
+            e => (e.Color + new Js.Color("ff0000")).R,
+            "(e)=>Color.CplusC(e.Color,new Color(1,0,0)).R"
+            );
+
+    }
+
+
 }
