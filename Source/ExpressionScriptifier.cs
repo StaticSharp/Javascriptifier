@@ -192,11 +192,10 @@ public class ExpressionScriptifier {
         if (operandResult)
             return new Result(expression);
 
-        if (expression.NodeType == ExpressionType.Convert) {
-            return operandResult;
-        }
-
-        if (expression.NodeType == ExpressionType.Quote) {
+        switch (expression.NodeType) {
+            case ExpressionType.Quote:
+            case ExpressionType.Convert:
+            case ExpressionType.TypeAs:
             return operandResult;
         }
 

@@ -2,11 +2,12 @@ using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Javascriptifier;
 
+namespace Test;
 
 [TestClass]
 public class UnitTest {
 
-    private void A(Expression<Func<Js.TestEnvironment, double>> expression, string reference) {
+    private void A(Expression<Func<Js.Block, double>> expression, string reference) {
         Assert.AreEqual(
             reference,
             ExpressionScriptifier.Scriptify(expression).ToString()
@@ -57,7 +58,7 @@ public class UnitTest {
         //It is imposible to call this method
         //neither on Back (because e.Int is not calculable)
         //nor on Front (because "this" cannot be serialized)
-        Expression<Func<Js.TestEnvironment, double>> expression = e => TestMethodInt(e.Int);
+        Expression<Func<Js.Block, double>> expression = e => TestMethodInt(e.Int);
 
         Assert.ThrowsException<NotImplementedException>(() => {
             ExpressionScriptifier.Scriptify(expression);
@@ -163,6 +164,18 @@ public class UnitTest {
 
     }
 
+    [TestMethod]
+    public void Cast() {
 
+        A(
+            e => (e as Js.Paragraph).FontSize,
+            "(e)=>e.FontSize"
+            );
+
+        A(
+            e => ((Js.Paragraph)e).FontSize,
+            "(e)=>e.FontSize"
+            );
+    }
 
 }

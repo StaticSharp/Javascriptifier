@@ -4,7 +4,7 @@ using Javascriptifier;
 namespace Js {
 
 
-    public interface TestEnvironment {
+    public interface Block {
         bool Bool { get; }
         public int Int { get; }
         public double Width { get; }
@@ -14,7 +14,10 @@ namespace Js {
         public int this[string key] {get;}
     }
 
-
+    public interface Paragraph : Block {
+        double FontSize { get; }
+    
+    }
 
 
     [JavascriptClass("window")]
