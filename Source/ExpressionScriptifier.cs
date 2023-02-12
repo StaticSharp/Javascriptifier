@@ -142,6 +142,8 @@ public class ExpressionScriptifier {
         } else {
             Type declaringType = expression.Method.DeclaringType!; //Null for Module methods (wtf) https://learn.microsoft.com/en-us/dotnet/api/system.reflection.module.getmethods?view=net-7.0
             objectOrType = GetTypeName(declaringType);
+            if (string.IsNullOrEmpty(objectOrType))
+                delimiter= "";
         }
 
         var script = $"{objectOrType}{delimiter}{call}";

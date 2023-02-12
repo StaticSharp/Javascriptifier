@@ -50,7 +50,14 @@ namespace Js {
     }
 
     [JavascriptClass("")]
-    public static class Math {
+    public static class Global {
+
+        [JavascriptOnlyMember]
+        public static double Property => throw new JavascriptOnlyException();
+
+        [JavascriptOnlyMember]
+        public static double Method() => throw new JavascriptOnlyException();
+
 
         public static double First(params double[] value) => throw new JavascriptOnlyException();
 
@@ -58,7 +65,7 @@ namespace Js {
 
         public static double Min(params double[] value) => throw new JavascriptOnlyException();
 
-        public static double Max(params double[] value) => throw new JavascriptOnlyException();
+        
     }
 
 

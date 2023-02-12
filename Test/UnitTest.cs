@@ -189,5 +189,26 @@ public class UnitTest {
 
     }
 
+    [TestMethod]
+    public void GlobalMethod() {
+
+        A(
+            e => Js.Global.Method(),
+            "(e)=>Method()"
+            );
+
+    }
+    
+    [TestMethod]
+    public void GlobalProperty() {
+
+        A(
+            e => Js.Global.Property,
+            "(e)=>Property"
+            );
+
+    }
+
+
 
 }
