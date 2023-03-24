@@ -7,7 +7,7 @@ namespace Test;
 [TestClass]
 public class UnitTest {
 
-    private void A(Expression<Func<Js.Block, double>> expression, string reference) {
+    private void A<T>(Expression<Func<Js.Block, T>> expression, string reference) {
         Assert.AreEqual(
             reference,
             ExpressionScriptifier.Scriptify(expression).ToString()
@@ -200,11 +200,11 @@ public class UnitTest {
     }
     
     [TestMethod]
-    public void GlobalProperty() {
+    public void UndefinedValue() {
 
         A(
-            e => Js.Global.Property,
-            "(e)=>Property"
+            e => Js.Global.UndefinedValue,
+            "(e)=>undefined"
             );
 
     }

@@ -52,6 +52,8 @@ namespace Js {
     [JavascriptClass("")]
     public static class Global {
 
+        public static double? UndefinedValue = null;
+
         [JavascriptOnlyMember]
         public static double Property => throw new JavascriptOnlyException();
 

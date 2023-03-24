@@ -11,7 +11,7 @@ public partial class ValueStringifier {
 
     public static string Stringify(object? value) {
         if (value == null)
-            return "null";
+            return "undefined";
         if (value is bool valueAsBool) {
             return valueAsBool.ToString().ToLower();
         }
