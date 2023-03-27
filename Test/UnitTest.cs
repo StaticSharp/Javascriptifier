@@ -209,6 +209,19 @@ public class UnitTest {
 
     }
 
+    [TestMethod]
+    public void BackendCalculation() {
+        var words = new[] { "hello", "world" };
+        A(
+            e => "Text "+string.Join(" ",words),
+            """
+            (e)=>"Text hello world"
+            """
+            );
+
+    }
+
+
 
 
 }

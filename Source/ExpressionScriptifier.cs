@@ -88,15 +88,13 @@ public class ExpressionScriptifier {
 
         for (int i = 0; i < arguments.Length; i++) {
             var isParams = parameters[i].GetCustomAttributes(typeof(ParamArrayAttribute), false).Length > 0;
-            if (isParams) {
-                if (arguments[i] is NewArrayExpression newArrayExpression) {
-                    var paramsExpressions = newArrayExpression.Expressions;
-                    foreach (var p in paramsExpressions) {
-                        argumentsResults.Add(Eval(p));
-                    }
-                } else {
-                    throw NotImplemented(arguments[i]);
+            if (isParams && (arguments[i] is NewArrayExpression newArrayExpression)) {
+
+                var paramsExpressions = newArrayExpression.Expressions;
+                foreach (var p in paramsExpressions) {
+                    argumentsResults.Add(Eval(p));
                 }
+
             } else {
                 argumentsResults.Add(Eval(arguments[i]));
             }
