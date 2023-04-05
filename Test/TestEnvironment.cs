@@ -15,6 +15,10 @@ namespace Js {
 
         public Color Color { get; }
 
+        [JavascriptPropertyGetFormat("Extension({0})")]
+        double ExtensionProperty { get; }
+
+
     }
 
     public interface Paragraph : Block {

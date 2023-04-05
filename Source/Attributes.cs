@@ -29,6 +29,15 @@ public class JavascriptPropertyNameAttribute : Attribute {
     }
 }
 
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+public class JavascriptPropertyGetFormatAttribute : Attribute {
+    public string Format { get; }
+    public JavascriptPropertyGetFormatAttribute(string format) {
+        Format = format;
+    }
+}
+
+
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property)]
 public class JavascriptOnlyMemberAttribute : Attribute {

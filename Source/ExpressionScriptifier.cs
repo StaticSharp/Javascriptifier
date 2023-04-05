@@ -113,13 +113,13 @@ public class ExpressionScriptifier {
 
         string call = "";
         string delimiter = ".";
-        var formant = expression.Method.GetCustomAttribute<JavascriptMethodFormatAttribute>()?.Format;
-        if (formant != null) {
+        var format = expression.Method.GetCustomAttribute<JavascriptMethodFormatAttribute>()?.Format;
+        if (format != null) {
             List<string> argumentsStrings = new();
             //This is made for Params arguments
             argumentsStrings.AddRange(argumentsResults.Take(arguments.Length - 1).Select(x => x.ToString()));
             argumentsStrings.Add(string.Join(",", argumentsResults.Skip(arguments.Length - 1)));
-            call = string.Format(formant, argumentsStrings.ToArray());
+            call = string.Format(format, argumentsStrings.ToArray());
         } else {
             var argumentList = string.Join(",", argumentsResults.Select(x => x.ToString()));
             if (expression.Method.IsSpecialName) {
@@ -165,15 +165,19 @@ public class ExpressionScriptifier {
             return new Result(expression);
         }
 
-        string objectOrType = "";
+        string objectOrType;
         if (expression.Expression == null) {//Static class
             objectOrType = GetTypeName(expression.Member.DeclaringType!);
         } else {
             objectOrType = objectResult!.ToString();
         }
 
-        var memberName = expression.Member.GetCustomAttribute<JavascriptPropertyNameAttribute>()?.Name ?? expression.Member.Name;
-        
+        var format = expression.Member.GetCustomAttribute<JavascriptPropertyGetFormatAttribute>()?.Format;
+        if (format != null) {
+            return new Result(string.Format(format, objectOrType));
+        }
+
+        var memberName = expression.Member.GetCustomAttribute<JavascriptPropertyNameAttribute>()?.Name ?? expression.Member.Name;        
         if (!string.IsNullOrEmpty(objectOrType))
             objectOrType = objectOrType + '.';
 

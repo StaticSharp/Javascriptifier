@@ -221,7 +221,15 @@ public class UnitTest {
 
     }
 
-
+    [TestMethod]
+    public void ExtensionProperty() {
+        A(
+            e => e.ExtensionProperty,
+            """
+            (e)=>Extension(e)
+            """
+            );
+    }
 
 
 }
