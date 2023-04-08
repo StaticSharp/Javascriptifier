@@ -169,12 +169,12 @@ public class UnitTest {
 
         A(
             e => (e as Js.Paragraph).FontSize,
-            "(e)=>e.FontSize"
+            "(e)=>as(e,\"Paragraph\").FontSize"
             );
 
         A(
             e => ((Js.Paragraph)e).FontSize,
-            "(e)=>e.FontSize"
+            "(e)=>convert(e,\"Paragraph\").FontSize"
             );
     }
 

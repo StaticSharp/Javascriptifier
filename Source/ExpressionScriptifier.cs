@@ -197,11 +197,20 @@ public class ExpressionScriptifier {
         if (operandResult)
             return new Result(expression);
 
-        switch (expression.NodeType) {
-            case ExpressionType.Quote:
-            case ExpressionType.Convert:
-            case ExpressionType.TypeAs:
+        if (expression.NodeType == ExpressionType.Quote) {
+            //lambds in lambda
             return operandResult;
+        }
+
+        if (expression.NodeType is ExpressionType.TypeAs or ExpressionType.Convert) {
+            var functionName = expression.NodeType == ExpressionType.TypeAs ? "as" : "convert";
+
+            if (operandResult) {
+                return new Result(expression);
+            } else {
+                var typeName = expression.Type.Name;
+                return new Result($"{functionName}({operandResult},\"{typeName}\")");
+            }
         }
 
         var Op = expression.NodeType switch {
