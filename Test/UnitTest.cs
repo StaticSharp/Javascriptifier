@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Javascriptifier;
+using Js;
 
 namespace Test;
 
@@ -166,6 +167,16 @@ public class UnitTest {
 
     [TestMethod]
     public void Cast() {
+
+        A(
+            e => (e as Entity).EntityId,
+            "(e)=>e.EntityId"
+            );
+
+        A(
+            e => (double)e.Int,
+            "(e)=>e.Int"
+            );
 
         A(
             e => (e as Js.Paragraph).FontSize,

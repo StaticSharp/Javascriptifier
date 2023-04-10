@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -191,8 +192,22 @@ public class ExpressionScriptifier {
         return typeName;
     }
 
-    private static Result EvalUnaryExpression(UnaryExpression expression) {
+    private static bool IsNumber(Type type) {
+        return type == typeof(decimal)
+        || type == typeof(double)
+        || type == typeof(float)
+        || type == typeof(int)
+        || type == typeof(uint)
+        || type == typeof(long)
+        || type == typeof(ulong)
+        || type == typeof(short)
+        || type == typeof(ushort)
+        || type == typeof(byte)
+        || type == typeof(sbyte);
+    }
 
+    private static Result EvalUnaryExpression(UnaryExpression expression) {
+        
         var operandResult = Eval(expression.Operand);
         if (operandResult)
             return new Result(expression);
@@ -202,15 +217,35 @@ public class ExpressionScriptifier {
             return operandResult;
         }
 
+        Type intType = typeof(int);
+        Type doubleType = typeof(double);
+
+        TypeConverter typeConverter = TypeDescriptor.GetConverter(doubleType);
+        bool isAssignable = typeConverter.CanConvertFrom(intType);
+
+        
+
+
         if (expression.NodeType is ExpressionType.TypeAs or ExpressionType.Convert) {
-            var functionName = expression.NodeType == ExpressionType.TypeAs ? "as" : "convert";
 
             if (operandResult) {
                 return new Result(expression);
-            } else {
-                var typeName = expression.Type.Name;
-                return new Result($"{functionName}({operandResult},\"{typeName}\")");
             }
+
+            if (expression.NodeType is ExpressionType.Convert) {
+                if (IsNumber(expression.Type) && IsNumber(expression.Operand.Type)) {
+                    return operandResult;
+                }
+            }           
+
+            if (expression.Type.IsAssignableFrom(expression.Operand.Type)) {
+                return operandResult;
+            }
+
+            var functionName = expression.NodeType == ExpressionType.TypeAs ? "as" : "convert";
+            var typeName = expression.Type.Name;
+            return new Result($"{functionName}({operandResult},\"{typeName}\")");
+            
         }
 
         var Op = expression.NodeType switch {

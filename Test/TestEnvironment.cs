@@ -4,7 +4,11 @@ using Javascriptifier;
 namespace Js {
 
 
-    public interface Block {
+    public interface Entity {
+        int EntityId { get; }
+    }
+
+    public interface Block: Entity {
         bool Bool { get; }
         public int Int { get; }
         public double Width { get; }
