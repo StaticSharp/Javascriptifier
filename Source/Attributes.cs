@@ -43,4 +43,7 @@ public class JavascriptPropertyGetFormatAttribute : Attribute {
 public class JavascriptOnlyMemberAttribute : Attribute {
 }
 
+[AttributeUsage(AttributeTargets.Method)]
+public class Stateful : Attribute {
+}
 

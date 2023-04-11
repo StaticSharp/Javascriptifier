@@ -4,12 +4,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
 namespace Javascriptifier;
 
 public class ExpressionScriptifier {
 
-
+    private static readonly string StateMarker = "\0state\0";
+    public static readonly string StateVariablePrefix = "state";
     public class Result {
         public bool Calculable => Expression != null;
 
@@ -41,8 +43,33 @@ public class ExpressionScriptifier {
     }
 
 
-    public static Result Scriptify(LambdaExpression expression) {
-        return EvalLambdaExpression(expression);
+    public static string Scriptify(LambdaExpression expression) {
+        var raw = EvalLambdaExpression(expression).ToString();
+        //Stateful expressions support
+        if (raw.IndexOf('\0') == -1) {
+            return raw;
+        }
+
+        var result = new StringBuilder();
+        var numStates = 0;
+        while (true) {
+            var i = raw.IndexOf(StateMarker);
+            if (i < 0) {
+                result.Append(raw);
+                break;
+            }
+            result.Append(raw[0..(i-1)]);
+            result.Append($".bind({StateVariablePrefix}{numStates})");
+            numStates++;
+            raw = raw[(i + StateMarker.Length -1)..];
+        }
+
+        if (numStates > 0) {
+            var stateVariables = string.Join(',', Enumerable.Range(0, numStates).Select(x => $"{StateVariablePrefix}{x}={{}}"));
+            return $"(()=>{{const {stateVariables};return {result.ToString()}}})()";
+        }
+
+        return result.ToString();
     }
 
     public static Result EvalLambdaExpression(LambdaExpression expression) {
@@ -131,7 +158,8 @@ public class ExpressionScriptifier {
                     throw NotImplemented(expression);
                 }
             } else {
-                call = $"{expression.Method.Name}({argumentList})";
+                var state = (expression.Method.GetCustomAttribute<Stateful>() != null) ? StateMarker : "";
+                call = $"{expression.Method.Name}{state}({argumentList})";
             }            
         }
 

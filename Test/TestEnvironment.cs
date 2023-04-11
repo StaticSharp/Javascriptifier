@@ -30,8 +30,16 @@ namespace Js {
 
     }
 
+    public static class Animation {
 
-    [JavascriptClass("window")]
+        [JavascriptOnlyMember]
+        [Stateful]
+        public static double Duration(double duration, double target) => throw new JavascriptOnlyException();
+    }
+
+
+
+        [JavascriptClass("window")]
     public static class Window {
         public static double DevicePixelRatio => throw new JavascriptOnlyException();
 

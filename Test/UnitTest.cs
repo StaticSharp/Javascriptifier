@@ -9,9 +9,11 @@ namespace Test;
 public class UnitTest {
 
     private void A<T>(Expression<Func<Js.Block, T>> expression, string reference) {
+        var actual = ExpressionScriptifier.Scriptify(expression).ToString();
         Assert.AreEqual(
             reference,
-            ExpressionScriptifier.Scriptify(expression).ToString()
+            actual,
+            $"\n{reference}\n{actual}"
             );
     }
 
@@ -241,6 +243,25 @@ public class UnitTest {
             """
             );
     }
+
+    [TestMethod]
+    public void StatefulLambda() {
+        /*
+        (() => {
+            let v0 = {}
+            return e => Animation.Duration(v0)(1000, () => as(e, "Hover").Value ? 100 : 0)
+        })()
+        */
+        var state = ExpressionScriptifier.StateVariablePrefix;
+
+        A(
+            e => Js.Animation.Duration(1,10),
+            $$"""
+            (()=>{const {{state}}0={};return (e)=>Animation.Duration.bind({{state}}0)(1,10)})()
+            """
+            );
+    }
+
 
 
 }
