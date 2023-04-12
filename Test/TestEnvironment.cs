@@ -39,7 +39,7 @@ namespace Js {
 
 
 
-        [JavascriptClass("window")]
+    [JavascriptClass("window")]
     public static class Window {
         public static double DevicePixelRatio => throw new JavascriptOnlyException();
 
@@ -62,6 +62,7 @@ namespace Js {
         [JavascriptPropertyName("nativeProperty")]
         public static double PropertyWithOtherName => throw new JavascriptOnlyException();
 
+        
 
     }
 
@@ -83,7 +84,13 @@ namespace Js {
 
         public static double Min(params double[] value) => throw new JavascriptOnlyException();
 
-        
+        [JavascriptOnlyMember]
+        public static double TupleParameter((double, double) pair) => throw new JavascriptOnlyException();
+
+        [JavascriptOnlyMember]
+        public static double TupleArrayParameter(params (double, double)[] keyframes) => throw new JavascriptOnlyException();
+
+
     }
 
 

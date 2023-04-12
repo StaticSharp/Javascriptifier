@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 
 namespace Javascriptifier;
 
@@ -42,6 +44,17 @@ public partial class ValueStringifier {
         if (value.GetType().IsPrimitive) {
             return value.ToString()!;
         }
+
+        if (value is ITuple valueTuple) {
+
+            var values = new string[valueTuple.Length];
+            for (int i = 0; i < valueTuple.Length; i++) {
+                values[i] = Stringify(valueTuple[i]);
+            }
+            return $"[{string.Join(',', values)}]";
+        }
+
+       
 
         throw new NotImplementedException($"Convertion to Js value not implemented for type {value.GetType()}");
     }

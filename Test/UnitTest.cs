@@ -263,5 +263,25 @@ public class UnitTest {
     }
 
 
+    [TestMethod]
+    public void Tuple() {
+
+        A(
+            e => Js.Global.TupleParameter(new(1, 10)),
+            $$"""
+            (e)=>TupleParameter([1,10])
+            """
+            );
+
+        A(
+            e => Js.Global.TupleArrayParameter(new(1, 10), new(2, 20)),
+            $$"""
+            (e)=>TupleArrayParameter([1,10],[2,20])
+            """
+            );
+
+    }
+
+
 
 }
