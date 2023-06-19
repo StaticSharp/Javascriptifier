@@ -75,6 +75,10 @@ namespace Js {
         public static double Property => throw new JavascriptOnlyException();
 
         [JavascriptOnlyMember]
+        public static double? NullableProperty => throw new JavascriptOnlyException();
+
+
+        [JavascriptOnlyMember]
         public static double Method() => throw new JavascriptOnlyException();
 
 

@@ -335,6 +335,8 @@ public class ExpressionScriptifier {
             ExpressionType.NotEqual => "!=",
             ExpressionType.Not => "!",
 
+            ExpressionType.Coalesce => "??",
+
             _ => throw NotImplemented(binaryExpression)
         };
 

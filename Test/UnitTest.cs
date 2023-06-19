@@ -283,5 +283,19 @@ public class UnitTest {
     }
 
 
+    
+    [TestMethod]
+    public void NullishCoalescing() {
+
+        A(
+            e => Js.Global.NullableProperty ?? 8,
+            $$"""
+            (e)=>(NullableProperty ?? 8)
+            """
+            );
+
+    }
+
+
 
 }
